@@ -1,6 +1,6 @@
+print()
 import math as m
 
-print()
 class Planet:
     
     def __init__(self, name: str, diameter: float, distance_from_sun: float, moon_list: list = []) -> None:
@@ -10,7 +10,6 @@ class Planet:
         self.distance_from_sun = distance_from_sun
         self.total_moons = len(moon_list)
         self.moon_list = moon_list
-
         
     def calculate_planet_volume(self) -> float:
         
@@ -22,11 +21,12 @@ class Planet:
         radius = self.diameter / 2
         return round(4 * m.pi * radius**2, 2)
     
-    def show_info(self) -> None:
+    def __str__(self) -> None:
         
+        print()
         print(f"Planet Name:         | {self.name:^25}")
-        print(f"Planet Diameter:     | {self.diameter:^25} km") 
-        print(f"Distance from Sun:   | {self.distance_from_sun:^25} million km") 
+        print(f"Planet Diameter:     | {self.diameter:^25} km")
+        print(f"Distance from Sun:   | {self.distance_from_sun:^25} million km")
         print(f"Total Moons:         | {self.total_moons:^25} Moons")
         print(f"Planet Volume:       | {self.calculate_planet_volume():^25} km^3")
         print(f"Planet Surface Area: | {self.calculate_surface_area():^25} km^2")
@@ -35,15 +35,17 @@ class Planet:
         print(f"{self.name} Moons:")
         print("-" * 80)
         
-        if not self.moon_list:
-            print("This Planet has no Moons")
+        if self.moon_list:
             
-        else:
             for moon in self.moon_list:
                 print(f"Moon Name: {moon.name}")
                 print(f"Moon Volume: {moon.calculate_moon_volume()} km^3")
                 print(f"Earth-Volume Ratio: {round(moon.calculate_moon_volume() / self.calculate_planet_volume(), 2)} km^3")
                 print()
+                
+        else:
+            print("This Planet has no Moons")
+
 
 class Moon:
     
@@ -54,7 +56,6 @@ class Moon:
     def calculate_moon_volume(self) -> float:
         radius = self.moon_diameter / 2
         return round(4/3 * m.pi * radius**3, 2)
-    
 
 planets: dict = {
     "Mercury": Planet("Mercury", 4879, 579.9),
@@ -72,8 +73,7 @@ try:
     choose_planet = str(input("Enter a planet in the solar system for details: ")).capitalize()
     
     if choose_planet in planets:
-        print()
-        planets[choose_planet].show_info()
+        print(planets[choose_planet])
     else:
         print("\nINVALID NAME!")
 
