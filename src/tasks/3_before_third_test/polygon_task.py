@@ -15,7 +15,8 @@ class Polygon:
         for sides in self.length_list:
             if self.total_sides >= 3 and len(self.length_list) == self.total_sides:
                 total_circumference += sides
-        return total_circumference
+                
+        return round(total_circumference, 2)
     
     def __str__(self) -> str:
         return f"Total sides: {self.total_sides} | Lengths: {self.length_list} | Circumference: {self.calculate_circumference()}"
@@ -50,7 +51,7 @@ class Rectangle(Polygon):
         self.height = height
 
     def calculate_area(self) -> float:
-        return self.width * self.height
+        return round(self.width * self.height, 2)
 
     def __str__(self) -> str:
         return (f"Rectangle | Width: {self.width}, Height: {self.height} | " f"Area: {self.calculate_area()} | " f"Circumference: {self.calculate_circumference()}"
@@ -97,13 +98,13 @@ class Triangle(Polygon):
     def calculate_area(self) -> float:
         s = (self.calculate_circumference() / 2)
         area = m.sqrt(s*(s - self.a)*(s - self.b)*(s - self.c))
-        return area
+        return round(area, 2)
     
     def __str__(self) -> str:
-        return (f"Total sides: {self.total_sides}|"
-                f"Lengths: {self.length_list}|"
-                f"Circumference: {self.calculate_circumference()}|"
-                f"Area: {self.calculate_area()}|")
+        return (f"Total sides: {self.total_sides:^3}\n"
+                f"Lengths: {self.length_list}\n"
+                f"Circumference: {self.calculate_circumference():^3}\n"
+                f"Area: {self.calculate_area():^3}\n")
 
 # 3b)
 
