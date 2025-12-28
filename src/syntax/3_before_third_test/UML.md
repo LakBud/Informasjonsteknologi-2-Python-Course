@@ -50,7 +50,7 @@ This means **one instance of ClassA can have many instances of ClassB**.
 
 ---
 
-## 3. Additional Notes
+## 2. Additional Notes
 
 - Keep diagrams **simple and clear**.
 - Use **multiplicities** to show how many objects participate in relationships.
