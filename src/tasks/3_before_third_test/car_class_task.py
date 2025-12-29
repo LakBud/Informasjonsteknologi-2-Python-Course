@@ -1,3 +1,5 @@
+from typing import List
+
 # 1
 class Car:
     def __init__(self, brand: str, model: str, year: int, km_state: float = 0.0) -> None:

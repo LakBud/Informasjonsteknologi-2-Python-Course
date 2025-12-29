@@ -1,0 +1,38 @@
+@startuml soccer_class_task
+
+
+class Soccer_club {
+    + player_list: list[Player] | None = None
+    + compute_average_age(): float 
+    + show_club_info(): None 
+}
+
+class Player {
+    + name: str 
+    + age: int 
+    + positions: list[str] | None = None
+    + show_info(): None 
+}
+
+class Forward {
+    + goals: int = 0
+    + show_info(): None 
+}
+
+class Midfielder {
+    + passes: int = 0
+    + show_info(): None 
+}
+
+class Defender {
+    + blocks: int = 0
+    + show_info(): None 
+}
+
+Soccer_club "1" --- "1..*" Player
+Player <|-- Forward
+Player <|-- Midfielder
+Player <|-- Defender
+
+
+@enduml

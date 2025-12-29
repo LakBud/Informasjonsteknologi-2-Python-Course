@@ -1,0 +1,29 @@
+@startuml inheritance_task
+
+class Ticket {
+    + price: float  
+    + mva: float
+    + calculate_price(): float
+    + show_info(): None
+}
+
+class Kids_Ticket {
+    + discount_rate: float
+    + calculate_price(): float
+}
+
+class Conscripts_Ticket {
+    + discount_rate: float
+    + calculate_price(): float
+}
+
+
+class Week_Ticket {
+    + calculate_price(): float
+}
+
+Ticket <|-- Kids_Ticket
+Ticket <|-- Conscripts_Ticket
+Ticket <|-- Week_Ticket
+
+@enduml

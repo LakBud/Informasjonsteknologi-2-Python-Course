@@ -1,0 +1,30 @@
+@startuml class_variables_task
+
+class class_variables_task.Bank_account {
+    + account_number: int
+    + interest_rate: float 
+    + owner: str
+    + balance: float 
+    + a_nr: int
+    - set_balance(): None
+    - take_balance(): None
+    - show_info(): None
+}
+
+class class_variables_task.Savings_account {
+    + interest_rate: float 
+    + total_takes: int
+    - take_balance(): None
+}
+
+
+class class_variables_task.BSU_account {
+    + interest_rate: float 
+    - take_balance(): None
+}
+
+class_variables_task.Bank_account "1" <|-- "1" class_variables_task.Savings_account
+class_variables_task.Bank_account "1" <|-- "1" class_variables_task.BSU_account
+
+
+@enduml

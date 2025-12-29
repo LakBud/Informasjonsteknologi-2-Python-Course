@@ -1,0 +1,22 @@
+@startuml book_class_task
+!pragma useIntermediatePackages false
+
+class book_class_task.Book {
+  + title: str
+  + author: str
+  + borrowed_by: Borrower | None
+  - show_info(): None
+}
+
+class book_class_task.Borrower {
+  + borrower_id: str
+  + loaned_books: None
+  - borrow_book(): None
+  - return_book(): None
+  - show_info(): None
+}
+
+book_class_task.Book "0..*" --- "1" book_class_task.Borrower : owns
+
+@enduml
+

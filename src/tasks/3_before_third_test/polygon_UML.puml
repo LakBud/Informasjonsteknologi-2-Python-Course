@@ -1,0 +1,34 @@
+@startuml polygon_task
+
+class Polygon {
+    + total_sides: int 
+    + length_list: list[int] | None = None
+    + calculate_circumference(): float 
+    + __str__(): str 
+}
+
+class Rectangle {
+    + width: float 
+    + height: float
+    + calculate_area(): float 
+    + __str__(): str 
+}
+
+class Square {
+    + side: float
+    + __str__(): str 
+}
+
+class Triangle {
+    - a: float 
+    - b: float
+    - c: float 
+    + calculate_area(): float
+    + __str__(): str 
+}
+
+Polygon <|-- Rectangle
+Polygon <|-- Square
+Polygon <|-- Triangle
+
+@enduml

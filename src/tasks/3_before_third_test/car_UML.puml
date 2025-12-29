@@ -1,0 +1,50 @@
+@startuml car_class_task
+!pragma useIntermediatePackages false
+
+class car_class_task.Car {
+  - _brand: str
+  - _model: str
+  - _year: int
+  - _km_state: float
+  + drive(km_driven: float): void
+  + __str__(): str
+}
+
+class car_class_task.Electric_car {
+  - _battery_capacity: float
+  - _battery_level: float
+  - _consumption: float
+  + charge(): void
+  + drive(km_driven: float): void
+}
+
+class car_class_task.Fossil_car {
+  - _tank_volume: float
+  - _fuel_level: float
+  - _consumption: float
+  + fuel_tank(): void
+  + drive(km_driven: float): void
+}
+
+class car_class_task.Customer {
+  - _name: str
+  - _cars: list<Car>
+  + buy_car(new_cars: list<Car>): void
+}
+
+class car_class_task.Car_Retailer {
+  - _name: str
+  - _car_storage: list<Car>
+  + add_car(new_car: Car): void
+  + sell_car(selected_car: Car, customer: Customer): void
+}
+
+' Inheritance
+car_class_task.Car <|-- car_class_task.Electric_car
+car_class_task.Car <|-- car_class_task.Fossil_car
+
+' Associations
+car_class_task.Customer "1" --- "0..*" car_class_task.Car : owns
+car_class_task.Car_Retailer "1" --- "0..*" car_class_task.Car : stores
+
+@enduml

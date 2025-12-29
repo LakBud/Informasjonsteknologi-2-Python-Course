@@ -15,7 +15,6 @@ class Dice:
 class Cheating_Dice(Dice):
     def __init__(self, total_sides: int) -> None:
         super().__init__(total_sides)
-        self.total_sides = total_sides
         self.highest_throw = 0
         
         

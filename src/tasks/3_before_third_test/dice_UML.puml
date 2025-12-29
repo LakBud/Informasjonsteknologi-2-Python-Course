@@ -1,0 +1,17 @@
+@startuml dice_class_task
+
+class dice_class_task.Dice {
+    + total_sides: int = 0
+    + dice_roll(): int
+    + show_info(): None
+}
+
+class dice_class_task.Cheating_Dice {
+    + highest_throw: int
+    + calculate_highest_throw(): None
+    + show_info(): None
+}
+
+dice_class_task.Dice  <|--  dice_class_task.Cheating_Dice : owns
+
+@enduml

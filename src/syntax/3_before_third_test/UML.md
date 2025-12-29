@@ -8,15 +8,15 @@ Class diagrams show the **structured parts of a system**.
 
 - Represents objects with **attributes** and **methods**.
 - Notation:
-  +----------------+
+  +------------------+
   | ClassName |
-  +----------------+
-  | attribute1 |
-  | attribute2 |
-  +----------------+
-  | method1() |
-  | method2() |
-  +----------------+
+  +------------------+
+  | - attribute1 |
+  | - attribute2 |
+  +------------------+
+  | + method1() |
+  | + method2() |
+  +------------------+
 
 ### 1.2 Objects
 
@@ -48,7 +48,42 @@ ClassA 1 ── \* ClassB
 
 This means **one instance of ClassA can have many instances of ClassB**.
 
----
+### 1.5 Creating UMLs with .puml files (PlantUML)
+
+PlantUML uses text-based descriptions to generate UML diagrams automatically.
+
+Basic structure of a class in PlantUML:
+
+@startuml
+class ClassName {
+-attribute1 : Type
+-attribute2 : Type
++method1()
++method2()
+}
+@enduml
+
+Relationships in PlantUML:
+
+ClassA "1" -- "0" ClassB : association
+ClassA o-- ClassB : aggregation
+ClassA \_-- ClassB : composition
+ClassA <|-- ClassB : inheritance
+ClassA ..> ClassB : dependency
+
+Tips for using PlantUML:
+
+Keep class diagrams readable; avoid too many classes in one diagram.
+
+Use comments in .puml files for clarity: ' This is a comment
+
+Can include multiple diagrams in one file using @startuml ... @enduml blocks.
+
+PlantUML integrates with IDE plugins, VS Code extensions, and online editors for live previews.
+
+### 1.9 Generate UMLs
+
+Command for generating start-up UMLs: pyreverse path/to/source -o png -p ProjectName -A -S
 
 ## 2. Additional Notes
 

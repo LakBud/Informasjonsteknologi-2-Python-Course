@@ -1,0 +1,23 @@
+@startuml planet_class_task
+
+class Planet {
+    + name: str 
+    + diameter: float 
+    + distance_from_sun: float 
+    + total_moons: int
+    + moon_list: list[Moon] | None = None
+    + calculate_planet_volume(): float 
+    + calculate_surface_area(): float
+    + __str__(): str 
+}
+
+class Moon {
+    + name: str 
+    + moon_diameter = float 
+    + calculate_moon_volume(): float
+}
+
+Planet "1" -- "1..*" Moon
+
+
+@enduml

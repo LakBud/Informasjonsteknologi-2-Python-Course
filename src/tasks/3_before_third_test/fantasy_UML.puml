@@ -1,0 +1,43 @@
+@startuml fantasy_game_class_task
+
+class Player {
+    - _races: list[str]
+    + race: str
+    + player_ID: str
+    + attack_power: int
+    + profession: str
+    + alive: bool
+    + side: None | str
+    + attack(): None
+    + show_info(): None
+}
+
+class Evil_player {
+    - _allowed_professions: list[str]
+    + profession: str | None
+    + side: str | None
+}
+
+
+class Good_player {
+    - _allowed_professions: list[str]
+    + profession: str | None
+    + side: None | str
+}
+
+class Game {
+    - _player_server: list
+    + add_players(): None
+    + find_player(): None
+    + show_evil_players(): None
+    + show_good_players(): None
+    + show_server(): None
+}
+
+Player <|-- Good_player
+Player <|-- Evil_player
+Player -- Game
+
+
+
+@enduml

@@ -2,7 +2,7 @@ class Book:
     def __init__(self, title: str, author: str) -> None:
         self.title = title
         self.author = author
-        self.borrowed_by = None
+        self.borrowed_by: Borrower | None = None
         
 
     def show_info(self) -> None:
