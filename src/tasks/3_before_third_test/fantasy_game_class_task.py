@@ -1,6 +1,11 @@
-class Player:
+from abc import ABC, abstractmethod
+
+class Player(ABC): # * ABC marks the class as an abstract (not to be used)
     
-    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str) -> None:
+    _allowed_races: list[str] = ["Human", "Orc", "Elf", "Dwarf"]
+    
+    @abstractmethod # * This disables the person class to be used for the init
+    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str, location: str = "Starter Village") -> None:
         
         """
         Docstring for __init__
@@ -16,17 +21,20 @@ class Player:
         :type profession: str
         """
         
-        _races: list[str] = ["Human", "Orc", "Elf", "Dwarf"]
         
-        if type(self) is Player:
-            raise Exception("Cannot instantiate Player. Pick between Good_player or Bad_player")
+        if race not in self._allowed_races:
+            raise ValueError("Invalid Race")
+        else:
+            self.race = race
+
         
         self.player_ID = player_ID
-        self.race = race if race in _races else None
         self.attack_power = attack_power
         self.profession = profession 
+        self.location = location
         self.alive = True
         self.side = None
+        
 
     def attack(self, target: Player) -> None:
         
@@ -63,15 +71,15 @@ class Player:
         
     def show_info(self) -> None:
         status = "alive" if self.alive else "dead"
-        print(f"Player ID: {self.player_ID:^10} | Race: {self.race:^10} | Profession: {self.profession:^10} | Side: {self.side:^10} | Attack Power: {self.attack_power:^4} | Status: {status:^2}")
+        print(f"Player ID: {self.player_ID:^10} | Race: {self.race:^10} | Profession: {self.profession:^10} | Side: {self.side:^10} | Attack Power: {self.attack_power:^4} | Status: {status:^2} | Location: {self.location:^4}")
 
         
 
-class Evil_player(Player):
+class EvilPlayer(Player):
     
     _allowed_professions: list[str] = ["Knight", "Wizard", "Archer", "Barbarian"]
     
-    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str) -> None:
+    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str, location: str = "Starter Village") -> None:
         
         """
         Docstring for __init__
@@ -87,18 +95,18 @@ class Evil_player(Player):
         :type profession: str
         """
         
-        super().__init__(player_ID, race, attack_power, profession)
+        super().__init__(player_ID, race, attack_power, profession, location)
         
         if profession not in self._allowed_professions:
-            self.profession = None
+            raise ValueError("Invalid Profession")
         
         self.side = "Evil"
 
-class Good_player(Player):
+class GoodPlayer(Player):
     
     _allowed_professions: list[str] = ["Knight", "Wizard", "Archer", "Palladin"]
     
-    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str) -> None:
+    def __init__(self, player_ID: str, race: str, attack_power: int, profession: str, location: str = "Starter Village") -> None:
         
         """
         Docstring for __init__
@@ -114,10 +122,10 @@ class Good_player(Player):
         :type profession: str
         """
         
-        super().__init__(player_ID, race, attack_power, profession)
+        super().__init__(player_ID, race, attack_power, profession, location)
         
         if profession not in self._allowed_professions:
-            self.profession = None
+            raise ValueError("Invalid Profession")
         
         self.side = "Good"
 
@@ -157,16 +165,24 @@ class Game:
     def show_evil_players(self) -> None:
         print()
         print("All evil players:")
+        total_evil: int = 0
         for person in self._player_server:
             if person.side == "Evil":
+                total_evil += 1
                 person.show_info()
+        print()
+        print(f"Total Amount of Evil Players: {total_evil}")
     
     def show_good_players(self) -> None:
         print()
         print("All good players:")
+        total_good: int = 0
         for person in self._player_server:
             if person.side == "Good":
+                total_good += 1
                 person.show_info()
+        print()
+        print(f"Total Amount of Good Players: {total_good}")
                 
     def show_server(self) -> None:
         print()
@@ -178,10 +194,13 @@ class Game:
 
 game = Game()
 
-alice = Good_player("Alice", "Human", 50, "Palladin")
-bob = Evil_player("Bob", "Orc", 45, "Barbarian")
+# robot = Player("Robot", "Human", 20, "Archer")
+alice = GoodPlayer("Alice", "Human", 50, "Palladin")
+bob = EvilPlayer("Bob", "Orc", 45, "Barbarian")
 
 game.add_players([alice, bob])
+
+
 
 game.show_good_players()
 game.show_evil_players()

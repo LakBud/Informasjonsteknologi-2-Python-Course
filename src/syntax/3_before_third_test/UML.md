@@ -81,7 +81,7 @@ Can include multiple diagrams in one file using @startuml ... @enduml blocks.
 
 PlantUML integrates with IDE plugins, VS Code extensions, and online editors for live previews.
 
-### 1.9 Generate UMLs
+### 1.6 Generate UMLs
 
 Command for generating start-up UMLs: pyreverse path/to/source -o png -p ProjectName -A -S
 

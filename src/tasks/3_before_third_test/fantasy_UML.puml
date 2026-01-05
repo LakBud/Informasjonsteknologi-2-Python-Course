@@ -1,43 +1,52 @@
 @startuml fantasy_game_class_task
 
-class Player {
-    - _races: list[str]
-    + race: str
-    + player_ID: str
-    + attack_power: int
-    + profession: str
-    + alive: bool
-    + side: None | str
-    + attack(): None
-    + show_info(): None
+
+' Abstract-like base class
+
+abstract class Player {
+    - _races : list[str]
+    + player_ID : str
+    + race : str
+    + attack_power : int
+    + profession : str
+    + alive : bool
+    + side : str
+    + location: str = "Starter Village"
+
+    + attack(target : Player) : None
+    + show_info() : None
 }
+
+
+' Subclasses
 
 class Evil_player {
-    - _allowed_professions: list[str]
-    + profession: str | None
-    + side: str | None
+    - _allowed_professions : list[str]
 }
-
 
 class Good_player {
-    - _allowed_professions: list[str]
-    + profession: str | None
-    + side: None | str
+    - _allowed_professions : list[str]
 }
+
+Player <|-- Evil_player
+Player <|-- Good_player
+
+
+' Game class
 
 class Game {
-    - _player_server: list
-    + add_players(): None
-    + find_player(): None
-    + show_evil_players(): None
-    + show_good_players(): None
-    + show_server(): None
+    - _player_server : list[Player]
+
+    + add_players(new_players : list[Player]) : None
+    + find_player(selected_id : str) : None
+    + show_evil_players() : None
+    + show_good_players() : None
+    + show_server() : None
 }
 
-Player <|-- Good_player
-Player <|-- Evil_player
-Player -- Game
 
+' Relationships
 
+Game "1" -- "0..*" Player
 
 @enduml

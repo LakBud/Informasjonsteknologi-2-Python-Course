@@ -2,7 +2,7 @@ print()
 import random as rnd
 
 class Dice:
-    def __init__(self, total_sides: int = 0) -> None:
+    def __init__(self, total_sides:int=0) -> None:
         self.total_sides = total_sides
         
     def dice_roll(self) -> int:

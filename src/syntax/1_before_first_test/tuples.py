@@ -85,7 +85,7 @@ Tuple = (9, 2, 3, 4, 7) # * List with () instead of []
 # print("------------------")
 # print(a,b,c,d, sep="\n")
 
-# ? The zip() function is an iterable & combines tuples into one
+# ? The zip() function is an iterable & combines tuples and lists into one
 # fruit = "apple", "banana", "orange"
 # price = 10, 8, 12
 

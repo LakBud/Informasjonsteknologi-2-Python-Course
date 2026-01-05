@@ -19,7 +19,7 @@ class Car:
         return f"Brand: {self._brand} | Model: {self._model} | Year: {self._year} | Kilometer State: {self._km_state}"
 
 # 3
-class Electric_car(Car):
+class ElectricCar(Car):
     def __init__(self, brand: str, model: str, year: int, battery_capacity: float, battery_level: float, consumption: float, km_state: float = 0.0) -> None:
         super().__init__(brand, model, year, km_state)
         self._battery_capacity = battery_capacity
@@ -40,7 +40,7 @@ class Electric_car(Car):
 
 
 
-class Fossil_car(Car):
+class FossilCar(Car):
     def __init__(self, brand: str, model: str, year: int, km_state: float, tank_volume: float, fuel_level: float, consumption: float) -> None:
         super().__init__(brand, model, year, km_state)
         self._tank_volume = tank_volume
@@ -66,7 +66,7 @@ class Customer:
         self._cars = cars if cars is not None else []
     
     
-    def buy_car(self, new_cars: list[Car] | None = None) -> None:
+    def buy_car(self, new_cars: list[Car]) -> None:
         if new_cars is not None:
             self._cars.extend(new_cars)
     
@@ -78,7 +78,7 @@ class Customer:
 
 
 
-class Car_Retailer:
+class CarRetailer:
     def __init__(self, name: str, car_storage: list[Car] | None = None) -> None:
         self._name = name
         self._car_storage = car_storage if car_storage is not None else []

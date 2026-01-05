@@ -4,7 +4,7 @@
 class book_class_task.Book {
   + title: str
   + author: str
-  + borrowed_by: Borrower | None
+  + borrowed_by: Borrower | None = None
   - show_info(): None
 }
 
@@ -16,7 +16,7 @@ class book_class_task.Borrower {
   - show_info(): None
 }
 
-book_class_task.Book "0..*" --- "1" book_class_task.Borrower : owns
+book_class_task.Book "0..*" --- "0..1" book_class_task.Borrower : owns
 
 @enduml
 

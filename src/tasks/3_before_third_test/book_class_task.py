@@ -12,7 +12,7 @@ class Book:
             status = "Available"
             
         print(f"Title: {self.title} | Author: {self.author} | Status: {status}")
-        
+            
 
 class Borrower:
     def __init__(self, borrower_id: str) -> None:
