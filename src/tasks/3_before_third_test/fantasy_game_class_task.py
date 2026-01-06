@@ -1,10 +1,8 @@
-from abc import ABC, abstractmethod
-
-class Player(ABC): # * ABC marks the class as an abstract (not to be used)
+class Player:
     
     _allowed_races: list[str] = ["Human", "Orc", "Elf", "Dwarf"]
     
-    @abstractmethod # * This disables the person class to be used for the init
+    
     def __init__(self, player_ID: str, race: str, attack_power: int, profession: str, location: str = "Starter Village") -> None:
         
         """
@@ -69,9 +67,17 @@ class Player(ABC): # * ABC marks the class as an abstract (not to be used)
             self.alive = False
             print(f"{self.player_ID} has died!")
         
-    def show_info(self) -> None:
-        status = "alive" if self.alive else "dead"
-        print(f"Player ID: {self.player_ID:^10} | Race: {self.race:^10} | Profession: {self.profession:^10} | Side: {self.side:^10} | Attack Power: {self.attack_power:^4} | Status: {status:^2} | Location: {self.location:^4}")
+    def __str__(self) -> str:
+        player_status = "alive" if self.alive else "dead"
+        return (
+        f"Player ID: {self.player_ID:^10} | "
+        f"Race: {self.race:^10} | "
+        f"Profession: {self.profession:^10} | "
+        f"Side: {self.side:^10} | "
+        f"Attack Power: {self.attack_power:^4} | "
+        f"Status: {player_status:^5} | "
+        f"Location: {self.location:^15}"
+        )
 
         
 
@@ -160,7 +166,7 @@ class Game:
         print()
         for person in self._player_server:
             if selected_id in person.player_ID:
-                person.show_info()
+                print(person)
     
     def show_evil_players(self) -> None:
         print()
@@ -169,7 +175,7 @@ class Game:
         for person in self._player_server:
             if person.side == "Evil":
                 total_evil += 1
-                person.show_info()
+                print(person)
         print()
         print(f"Total Amount of Evil Players: {total_evil}")
     
@@ -180,7 +186,7 @@ class Game:
         for person in self._player_server:
             if person.side == "Good":
                 total_good += 1
-                person.show_info()
+                print(person)
         print()
         print(f"Total Amount of Good Players: {total_good}")
                 
@@ -188,7 +194,7 @@ class Game:
         print()
         print("Server:")
         for person in self._player_server:
-            person.show_info()
+            print(person)
 
 # Test-Case
 
@@ -199,7 +205,6 @@ alice = GoodPlayer("Alice", "Human", 50, "Palladin")
 bob = EvilPlayer("Bob", "Orc", 45, "Barbarian")
 
 game.add_players([alice, bob])
-
 
 
 game.show_good_players()

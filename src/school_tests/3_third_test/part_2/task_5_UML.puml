@@ -1,0 +1,38 @@
+@startuml oppgave_5
+
+class Enhet {
+    - _navn: str
+    - _id: int 
+    + total_count: int
+    + status: bool = False
+    + slå_av(): None 
+    + slå_på(): None
+
+}
+
+class LysEnhet {
+    + lysstyrke: int
+}
+
+class VarmEnhet {
+    + temperatur: int
+}
+
+class Smarthub {
+    + totale_enheter: list<Enhet>
+    + totale_aktive_enheter: list<Enhet>
+    + system_status(): None
+    + legg_til_enhet(ny_enhet: Enhet): None
+    + fjern_til_enhet(valgt_enhet: Enhet): None
+    + skru_av_alt(): None
+}
+
+
+Enhet <|-- LysEnhet
+Enhet <|-- VarmEnhet
+Enhet "1..*" -- "1" Smarthub
+
+
+
+
+@enduml
