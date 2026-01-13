@@ -1,7 +1,7 @@
 print()
 import json
 
-fly: str = "src/school_tests/2.second_test/json-for-test-nov-25.json" 
+fly: str = "src/school_tests/2_second_test/part_2/json-for-test-nov-25.json" 
 
 
 with open(fly, encoding="utf-8") as fly_fil:

@@ -9,3 +9,4 @@ tempCodeRunnerFile.py
 
 # macOS files
 .DS_Store
+.venv
