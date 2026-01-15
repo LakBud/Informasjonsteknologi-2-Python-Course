@@ -1,36 +1,28 @@
 import pygame as pg
-
-
-# OOP is very useful in pygame because
-# each game object (ball, player, enemy)
-# can be represented as a class.
+import math as m
 
 
 class Ball:
     def __init__(self, window, start_x: int, start_y: int, radius: int, color: tuple, speed_x: float, speed_y: float):
-        # The surface where the ball will be drawn
+
         self._window = window
         
-        # Ball position
+    
         self._x = start_x
         self._y = start_y
         
-        # Ball appearance
         self._radius = radius
         self._color = color
         
-        # Ball movement speed
+        
         self._speed_x = speed_x
         self._speed_y = speed_y
         
     
     def draw(self):
-        # Draw the ball as a circle on the window
-        # Position must be integers for pygame
         pg.draw.circle(self._window, self._color, (int(self._x), int(self._y)), self._radius)
     
     def move(self, key_pressed = None):
-        # Move the ball using keyboard input
         if key_pressed[pg.K_LEFT]:
             self._x -= self._speed_x
         
@@ -43,51 +35,77 @@ class Ball:
         if key_pressed[pg.K_DOWN]:
             self._y += self._speed_y
         
-        # Get window size to keep the ball on screen
         width, height = self._window.get_size()
 
-        # Prevent the ball from leaving the top/bottom
+
         if self._y + self._radius > height:
             self._y = height - self._radius
         elif self._y - self._radius < 0:
             self._y = self._radius
 
-        # Prevent the ball from leaving the left/right
+
         if self._x + self._radius > width:
             self._x = width - self._radius
         elif self._x - self._radius < 0:
             self._x = self._radius
 
+    # AI-generated code meant for the task
+    def detect_collision(self, other: Ball):
+        dx = other._x - self._x
+        dy = other._y - self._y
+        distance = m.hypot(dx, dy)
 
+        # Check collision
+        if distance <= self._radius + other._radius and distance != 0:
+            # Normal vector
+            nx = dx / distance
+            ny = dy / distance
 
+            # Tangent vector
+            tx = -ny
+            ty = nx
 
+            # Dot product tangent
+            dpTan1 = self._speed_x * tx + self._speed_y * ty
+            dpTan2 = other._speed_x * tx + other._speed_y * ty
 
+            # Dot product normal
+            dpNorm1 = self._speed_x * nx + self._speed_y * ny
+            dpNorm2 = other._speed_x * nx + other._speed_y * ny
+
+            # Swap normal velocities (equal mass, elastic)
+            self._speed_x = tx * dpTan1 + nx * dpNorm2
+            self._speed_y = ty * dpTan1 + ny * dpNorm2
+            other._speed_x = tx * dpTan2 + nx * dpNorm1
+            other._speed_y = ty * dpTan2 + ny * dpNorm1
+
+            # Prevent overlap
+            overlap = 0.5 * (self._radius + other._radius - distance + 1)
+            self._x -= overlap * nx
+            self._y -= overlap * ny
+            other._x += overlap * nx
+            other._y += overlap * ny
 
 
 
 class MovingBall(Ball):
     def __init__(self, window, start_x, start_y, radius, color, speed_x, speed_y):
-        # Call the parent class constructor
         super().__init__(window, start_x, start_y, radius, color, speed_x, speed_y)
     
     def move(self):
-        # Automatic movement (no keyboard input)
         self._x += self._speed_x
         self._y += self._speed_y
         
         width, height = self._window.get_size()
         
-        # Bounce off left and right walls
         if self._x - self._radius <= 0 or self._x + self._radius >= width:
             self._speed_x = -self._speed_x
 
-        # Bounce off top and bottom walls
         if self._y - self._radius <= 0 or self._y + self._radius >= height:
             self._speed_y = -self._speed_y 
 
 
 
-# Initialize pygame and create the window
 
 
 pg.init()
@@ -106,14 +124,16 @@ radius = 20
 active = True
 
 # Create ball objects
-ball1 = Ball(window, ball_x, ball_y, radius, (255, 0, 0), speed_x, speed_y)
-ball2 = Ball(window, ball_x - 30, ball_y + 40, radius, (255, 0, 0), speed_x, speed_y)
-ball3 = MovingBall(window, ball_x + 40, ball_y + 100, 30, (120, 255, 20), speed_x, speed_y)
+ball1 = Ball(window, ball_x, ball_y, radius, (54, 0, 122), speed_x, speed_y)
+ball2 = Ball(window, ball_x - 30, ball_y + 40, radius, (255, 15, 0), speed_x + 30, speed_y)
+ball3 = Ball(window, ball_x + 10, ball_y + 100, 30, (122, 100, 40), speed_x + 10, speed_y + 10)
+
+ball4 = MovingBall(window, ball_x + 40, ball_y + 100, 30, (120, 10, 20), speed_x, speed_y)
+ball5 = MovingBall(window, ball_x + 10, ball_y + 5, 30, (120, 255, 20), speed_x, speed_y)
 
 
 
-
-balls = [ball1, ball2, ball3]
+balls = [ball1, ball2, ball3, ball4, ball5]
 
 while active:
     for action in pg.event.get():
@@ -122,7 +142,7 @@ while active:
             
     window.fill((255, 255, 255))
     
-    # Draw and move keyboard-controlled balls
+    
     for b in balls:
         b.draw()
         if isinstance(b, MovingBall):
@@ -130,6 +150,9 @@ while active:
         else:
             b.move(pg.key.get_pressed())  
 
+    for i in range(len(balls)):
+        for j in range(i + 1, len(balls)):
+            balls[i].detect_collision(balls[j])
 
 
     pg.display.flip()
