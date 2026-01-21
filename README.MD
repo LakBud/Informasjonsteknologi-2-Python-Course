@@ -16,7 +16,9 @@
 ```
 Informasjonsteknologi-2-python-course/
 ├── data/
-│   └── json_files/ → Datasets used in tasks and syntax folder  
+│   └── json_files/ → Datasets used in tasks and syntax folder
+├── images/
+│   └── pngs/ → Pictures for tasks and learning
 ├── src/
 │   ├── school_tests/
 │   │   └── tests/
@@ -27,6 +29,12 @@ Informasjonsteknologi-2-python-course/
 │   └── tasks/
 │       └── before_tests/
 │           └── task_files/ → Assignments, exercises, and test practice
+├── .python-version/
+│   └── shows the python version
+├── pyproject.toml/
+│   └── shows info
+├── uv.lock/
+│   └── Shows the dependencies
 ```
 
 - The numbers on the files "syntax" and "tasks" means the files were created before a college python test.

@@ -14,7 +14,7 @@ class Player:
         # You use a try to load the pictures.
         try:
             # Where is where you load it and should convert to alpha ()
-            self._original_picture = pg.image.load("src/syntax/4_before_fourth_test/images/IT2-Spaceship1.png").convert_alpha()
+            self._original_picture = pg.image.load("images/IT2-Spaceship1.png").convert_alpha()
             # ? You use tranform.scale(image, (width, heigth)) to determine the size and which picture you are gonna use
             self._picture = pg.transform.scale(self._original_picture, (self._width, self._height))
             
