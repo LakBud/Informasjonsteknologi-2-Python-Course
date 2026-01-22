@@ -50,7 +50,7 @@ class Ball:
             self._x = self._radius
 
     # AI-generated code meant for the task
-    def detect_collision(self, other: Ball):
+    def detect_collision(self, other):
         dx = other._x - self._x
         dy = other._y - self._y
         distance = m.hypot(dx, dy)
@@ -133,7 +133,7 @@ ball5 = MovingBall(window, ball_x + 10, ball_y + 5, 30, (120, 255, 20), speed_x,
 
 
 
-balls = [ball1, ball2, ball3, ball4, ball5]
+balls: list[Ball] = [ball1, ball2, ball3, ball4, ball5]
 
 while active:
     for action in pg.event.get():

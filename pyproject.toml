@@ -3,7 +3,7 @@ name = "python-kode"
 version = "0.1.0"
 description = "Informationsteknologi 2 / Information Technology 2 Python Course 2025/2026 | A course within Python in the Norwegian subject IT-2."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 dependencies = [
     "pygame>=2.6.1",
 ]

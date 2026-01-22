@@ -1,0 +1,40 @@
+@startuml classes
+
+class GameObject {
+    - window
+    - start_coord: tuple<int, int>
+    - width_obj: int 
+    - height_obj: int
+    - color: tuple<int, ...>
+    - speed: int,
+    - image_path = None
+    - rect
+    - draw(): None 
+    - collides_with(other_obj): bool
+}
+
+class Player {
+    + bullets = []
+    - move(): None
+    - activate_border_collision(): None
+    - move(): None
+    - shoot(): None
+}
+
+class Alien {
+    - start_x: int
+    - start_y: int
+    - x_speed: int
+    - move(): None
+}
+
+class Bullet {
+    - move(): None
+}
+
+GameObject <|-- Player
+GameObject <|-- Alien
+GameObject <|-- Bullet
+
+
+@enduml
