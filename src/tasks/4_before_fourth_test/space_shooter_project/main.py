@@ -2,13 +2,13 @@ import pygame as pg
 import random as rnd
 from classes import Player, Alien
 
+# Global Variables
+WIDTH = 1600
+HEIGHT = 1000
+FPS = 60
+
 
 def main():
-    # Local Variables
-    WIDTH = 1600
-    HEIGHT = 1000
-    FPS = 60
-
     # Game Variables
     active = True
     score = 0
@@ -18,7 +18,7 @@ def main():
     player_color: tuple[int, int, int] = (0, 0, 255) 
     player_width: int = 100
     player_height: int = 100
-    player_speed: int = 20
+    player_speed: int = 20 
 
     # Enemy configuration
     spawn_timer = 0
