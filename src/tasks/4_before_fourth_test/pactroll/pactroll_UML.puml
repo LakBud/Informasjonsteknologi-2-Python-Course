@@ -1,0 +1,37 @@
+@startuml classes
+
+abstract class classes.GameObject {
+    - window
+    - x: int
+    - y: int
+    - width: int
+    - height: int
+    - color: tuple<int, int, int>
+    - font
+    - word
+    + image
+    + rect
+    - draw(): None 
+    - collides_with(other_obj): bool
+}
+
+class classes.Troll {
+    - speed_x: float
+    - speed_y: float
+    - move(): None
+    - handle_input(): None
+    - update_speed(increment: float = 1E-5): None
+}
+
+class classes.Food {
+}
+
+class classes.Obstacle {
+}
+
+GameObject <|-- Troll
+GameObject <|-- Food
+GameObject <|-- Obstacle
+
+
+@enduml

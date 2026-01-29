@@ -1,7 +1,7 @@
 import pygame as pg
 from abc import ABC
 
-# Globale Variable
+# Globale Variabler
 BREDDE, HOYDE = 800, 600
 aktiv = True
 FPS = 60 # Frames per second
@@ -13,7 +13,7 @@ class SpillObjekt(ABC):
     Docstring for SpillObjekt
     
     SpillObjekt er en abstrakt klasse.
-    Betyr at det skal bare bli arvet og ikke brukt direkte
+    Betyr at det skal bare bli arvet og ikke kan bli brukt direkte
     ABC blir brukt for å indikere en abstrakt klasse
     """
     
