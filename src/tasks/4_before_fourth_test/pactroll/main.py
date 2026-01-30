@@ -2,6 +2,7 @@ import pygame as pg
 import random as rnd
 from classes import Troll, Food, Obstacle
 from utils import spawn_free_pos
+from config import *
 
 # Global Variables
 WIDTH, HEIGHT = 1000, 1000
@@ -16,57 +17,38 @@ def main():
     my_font = pg.font.SysFont(None, 50)
     score: int = 0
 
-    # Troll config
-    troll_start_coord: tuple[int, int] = (WIDTH // 2, HEIGHT // 2)
-    troll_width: int = 50
-    troll_height: int = 50
-    troll_color: tuple[int, int, int] = (0, 225, 0)
-    troll_speed_x: int = 5
-    troll_speed_y: int = 5
-    troll_word: str = "T"
-
+    # Troll
     troll_player = Troll(
         screen,
-        troll_start_coord,
-        troll_width,
-        troll_height,
-        troll_color,
-        troll_speed_x,
-        troll_speed_y,
+        TROLL_START_COORD,
+        TROLL_WIDTH,
+        TROLL_HEIGHT,
+        TROLL_COLOR,
+        TROLL_SPEED_X,
+        TROLL_SPEED_Y,
         my_font,
-        troll_word,
+        TROLL_LETTER,
     )
 
-    # Food config
-    food_width: int = 40
-    food_height: int = 40
-    food_color: tuple[int, int, int] = (255, 225, 0)
-    food_word: str = "M"
-
+    # Food
     foods: list[Food] = []
-
-    for _ in range(3):
+    for _ in range(FOOD_COUNT):
         new_food_coord = (
-            rnd.randint(0, WIDTH - food_width),
-            rnd.randint(0, HEIGHT - food_height),
+            rnd.randint(0, SCREEN_WIDTH - FOOD_WIDTH),
+            rnd.randint(0, SCREEN_HEIGHT - FOOD_HEIGHT),
         )
         foods.append(
             Food(
                 screen,
                 new_food_coord,
-                food_width,
-                food_height,
-                food_color,
+                FOOD_WIDTH,
+                FOOD_HEIGHT,
+                FOOD_COLOR,
                 my_font,
-                food_word,
+                FOOD_LETTER,
             )
         )
 
-    # Obstacle config
-    obstacle_width = food_width
-    obstacle_height = food_height
-    obstacle_color: tuple[int, int, int] = (128, 128, 128)
-    obstacle_word: str = "H"
 
     pending_obstacles: list[tuple] = []
     obstacles: list[Obstacle] = []
@@ -108,17 +90,17 @@ def main():
 
                 # Create new coords for the new food
                 new_food_coord = spawn_free_pos(
-                    (food_width, food_height), foods + obstacles, WIDTH, HEIGHT
+                    (FOOD_WIDTH, FOOD_HEIGHT), foods + obstacles, WIDTH, HEIGHT
                 )
                 foods.append(
                     Food(
                         screen,
                         new_food_coord,
-                        food_width,
-                        food_height,
-                        food_color,
+                        FOOD_WIDTH,
+                        FOOD_HEIGHT,
+                        FOOD_COLOR,
                         my_font,
-                        food_word,
+                        FOOD_LETTER,
                     )
                 )
 
@@ -138,11 +120,11 @@ def main():
                     Obstacle(
                         screen,
                         pos,
-                        obstacle_width,
-                        obstacle_height,
-                        obstacle_color,
+                        OBSTACLE_WIDTH,
+                        OBSTACLE_HEIGHT,
+                        OBSTACLE_COLOR,
                         my_font,
-                        obstacle_word,
+                        OBSTACLE_LETTER,
                     )
                 )
                 # Remove the posistion and spawn time from the previous obstacle

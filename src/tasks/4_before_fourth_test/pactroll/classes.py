@@ -131,7 +131,7 @@ class Troll(GameObject):
         if keys[pg.K_DOWN]:
             self._speed_y = abs(self._speed_y)
 
-    def update_speed(self, increment: float = 1e-5) -> None:
+    def update_speed(self, increment: float = 1E-4) -> None:
         # Increases the speed based on the direction
         self._speed_x += increment if self._speed_x > 0 else -increment
         self._speed_y += increment if self._speed_y > 0 else -increment

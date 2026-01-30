@@ -8,7 +8,7 @@ abstract class classes.GameObject {
     - height: int
     - color: tuple<int, int, int>
     - font
-    - word
+    - letter
     + image
     + rect
     - draw(): None 
