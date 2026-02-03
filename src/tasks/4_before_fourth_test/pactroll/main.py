@@ -4,18 +4,17 @@ from classes import Troll, Food, Obstacle
 from utils import spawn_free_pos
 from config import *
 
-# Global Variables
-WIDTH, HEIGHT = 1000, 1000
-FPS = 60  # Frames per second
-
 
 def main():
     # Start
     pg.init()
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pg.time.Clock()
     my_font = pg.font.SysFont(None, 50)
+
+    # Game variables
     score: int = 0
+    GAME_OVER: bool = False
 
     # Troll
     troll_player = Troll(
@@ -32,6 +31,7 @@ def main():
 
     # Food
     foods: list[Food] = []
+
     for _ in range(FOOD_COUNT):
         new_food_coord = (
             rnd.randint(0, SCREEN_WIDTH - FOOD_WIDTH),
@@ -49,13 +49,11 @@ def main():
             )
         )
 
-
     pending_obstacles: list[tuple] = []
     obstacles: list[Obstacle] = []
 
-    # Game Config
-    screen_rect = pg.Rect(0, 0, WIDTH, HEIGHT)
-    DELAY_MS = 500
+    # Game setup
+    screen_rect = pg.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
     active = True
 
     # Game loop (Primary Loop)
@@ -65,16 +63,16 @@ def main():
             if action.type == pg.QUIT:
                 active = False
 
-        screen.fill((0, 0, 0))  # Black
+        screen.fill(BLACK)
 
         # Frem forth tha playah
-        troll_player.handle_input()
-        troll_player.move()
+        troll_player.handle_input(GAME_OVER)
+        troll_player.move(GAME_OVER)
         troll_player.update_speed()
         troll_player.draw()
 
         if not screen_rect.contains(troll_player.rect):
-            active = False
+            GAME_OVER = True
 
         # Draw the foods
         for food in foods:
@@ -90,7 +88,10 @@ def main():
 
                 # Create new coords for the new food
                 new_food_coord = spawn_free_pos(
-                    (FOOD_WIDTH, FOOD_HEIGHT), foods + obstacles, WIDTH, HEIGHT
+                    (FOOD_WIDTH, FOOD_HEIGHT),
+                    foods + obstacles,
+                    SCREEN_WIDTH,
+                    SCREEN_HEIGHT,
                 )
                 foods.append(
                     Food(
@@ -105,7 +106,7 @@ def main():
                 )
 
                 # Append the obstacle within pending_obstacles for the delay
-                spawn_time = pg.time.get_ticks() + DELAY_MS
+                spawn_time = pg.time.get_ticks() + OBSTACLE_DELAY_MS
                 pending_obstacles.append((food.rect.center, spawn_time))
 
         current_time = (
@@ -135,11 +136,29 @@ def main():
             obstacle.draw()
 
             if obstacle.collides_with(troll_player):
-                active = False
+                GAME_OVER = True
 
         # Score
         score_text = my_font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
+
+        # Game Over
+        if GAME_OVER:
+            screen.fill(BLACK)
+
+            # Text for GAME OVER
+            text = my_font.render("GAME OVER", True, (255, 0, 0))
+            text_rect = text.get_rect(
+                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 40)
+            )
+            screen.blit(text, text_rect)
+
+            # Text for the score
+            game_over_score = my_font.render(f"SCORE: {score}", True, (255, 0, 0))
+            score_rect = game_over_score.get_rect(
+                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 40)
+            )
+            screen.blit(game_over_score, score_rect)
 
         # Update
         pg.display.flip()

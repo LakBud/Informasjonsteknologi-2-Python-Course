@@ -1,8 +1,7 @@
 import pygame as pg
 import random as rnd
 
-
-def spawn_free_pos(size, blocked, width: int, height: int, max_attempts: int = 1000):
+def spawn_free_pos(size: tuple[int, int], blocked: list, width: int, height: int, max_attempts: int = 1000000):
     for _ in range(max_attempts):
         # Pick a random x and y position within the screen bounds
         x = rnd.randint(size[0], width - size[0])

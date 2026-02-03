@@ -107,29 +107,30 @@ class Troll(GameObject):
         self._speed_x = speed_x
         self._speed_y = speed_y
 
-    def move(self) -> None:
-        # Automatic movement (no keyboard input)
-        self._x += self._speed_x
-        self._y += self._speed_y
+    def move(self, GAME_OVER: bool) -> None:
+        if not GAME_OVER: # Automatic movement (no keyboard input)
+            self._x += self._speed_x
+            self._y += self._speed_y
 
-        # Update the surface with the new x and y
-        self.rect.center = (self._x, self._y)
+            # Update the surface with the new x and y
+            self.rect.center = (self._x, self._y)
 
-    def handle_input(self) -> None:
-        keys = pg.key.get_pressed()
+    def handle_input(self, GAME_OVER: bool) -> None:
+        if not GAME_OVER:
+            keys = pg.key.get_pressed()
 
-        # Use abs() to keep the speed the same size while flipping its sign to change direction
-        if keys[pg.K_LEFT]:
-            self._speed_x = -abs(self._speed_x)
+            # Use abs() to keep the speed the same size while flipping its sign to change direction
+            if keys[pg.K_LEFT]:
+                self._speed_x = -abs(self._speed_x)
 
-        if keys[pg.K_RIGHT]:
-            self._speed_x = abs(self._speed_x)
+            if keys[pg.K_RIGHT]:
+                self._speed_x = abs(self._speed_x)
 
-        if keys[pg.K_UP]:
-            self._speed_y = -abs(self._speed_y)
+            if keys[pg.K_UP]:
+                self._speed_y = -abs(self._speed_y)
 
-        if keys[pg.K_DOWN]:
-            self._speed_y = abs(self._speed_y)
+            if keys[pg.K_DOWN]:
+                self._speed_y = abs(self._speed_y)
 
     def update_speed(self, increment: float = 1E-4) -> None:
         # Increases the speed based on the direction

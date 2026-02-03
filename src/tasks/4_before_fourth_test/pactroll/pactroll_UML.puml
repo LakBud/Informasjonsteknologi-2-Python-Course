@@ -18,9 +18,9 @@ abstract class classes.GameObject {
 class classes.Troll {
     - speed_x: float
     - speed_y: float
-    - move(): None
-    - handle_input(): None
-    - update_speed(increment: float = 1E-5): None
+    - move(GAME_OVER: bool): None
+    - handle_input(GAME_OVER: bool): None
+    - update_speed(increment: float = 1E-4): None
 }
 
 class classes.Food {
