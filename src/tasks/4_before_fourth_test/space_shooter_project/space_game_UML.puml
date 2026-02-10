@@ -32,6 +32,22 @@ class Bullet {
     - move(): None
 }
 
+class GameManager {
+    - screen
+    - clock
+    - font 
+    - background_image
+    + all_sprites
+    + aliens
+    + bullets 
+    + player 
+    + active: bool
+    + score: int 
+    + spawn_timer: int 
+    + spawn_interval: int
+    - game_over: bool
+}
+
 GameObject <|-- Player
 GameObject <|-- Alien
 GameObject <|-- Bullet

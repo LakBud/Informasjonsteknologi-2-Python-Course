@@ -1,6 +1,29 @@
 @startuml classes
 
-abstract class classes.GameObject {
+class classes.GameManager {
+    - screen: Surface
+    - clock: Clock
+    - font: Font
+    - all_sprites: Group
+    - foods: Group
+    - obstacles: Group
+    - score: int
+    - game_over: bool
+    - active: bool
+    - player: Troll
+    - pending_obstacles: list
+    + __init__()
+    + spawn_food()
+    + spawn_obstacle(pos)
+    + handle_events()
+    + update()
+    + draw()
+    + run()
+}
+
+
+
+class classes.GameObject {
     - window
     - x: int
     - y: int
@@ -18,8 +41,7 @@ abstract class classes.GameObject {
 class classes.Troll {
     - speed_x: float
     - speed_y: float
-    - move(GAME_OVER: bool): None
-    - handle_input(GAME_OVER: bool): None
+    - update(GAME_OVER: bool): None
     - update_speed(increment: float = 1E-4): None
 }
 
@@ -28,6 +50,8 @@ class classes.Food {
 
 class classes.Obstacle {
 }
+
+
 
 GameObject <|-- Troll
 GameObject <|-- Food

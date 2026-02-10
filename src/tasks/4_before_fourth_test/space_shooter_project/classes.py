@@ -1,7 +1,7 @@
 import random as rnd
 import pygame as pg
 
-class GameObject:
+class GameObject(pg.sprite.Sprite):
     def __init__(self, window, start_coord: tuple[int, int], width_obj: int, height_obj: int, color: tuple[int, int, int], speed: int, image_path = None) -> None:
         
         """
@@ -21,6 +21,7 @@ class GameObject:
         :type speed: int
         :param image_path: Description
         """
+        super().__init__() 
         
         self._window = window
         self._width = width_obj
@@ -30,30 +31,33 @@ class GameObject:
     
         if image_path:
             try:
-                self._original_image = pg.image.load(image_path).convert_alpha()
-                self._image = pg.transform.scale(self._original_image, (self._width, self._height))
+                self.image = pg.image.load(image_path).convert_alpha()
+                self.image = pg.transform.scale(self.image, (self._width, self._height))
             except FileNotFoundError:
-                self._image = pg.Surface((self._width, self._height))
-                self._image.fill(self._color)
+                self.image = pg.Surface((self._width, self._height))
+                self.image.fill(self._color)
         else:
-            self._image = pg.Surface((self._width, self._height))
-            self._image.fill(self._color)
+            self.image = pg.Surface((self._width, self._height))
+            self.image.fill(self._color)
         
         
-        self.rect = self._image.get_rect(center=start_coord)
+        self.rect = self.image.get_rect(center=start_coord)
         
     def draw(self) -> None:
-        self._window.blit(self._image, self.rect.topleft)
+        self._window.blit(self.image, self.rect.topleft)
 
     def collides_with(self, other_obj) -> bool:
         return self.rect.colliderect(other_obj.rect)
+
+    def update(self) -> None:
+        pass
 
 class Player(GameObject):
     def __init__(self, window, start_coord: tuple[int, int], width_obj: int, height_obj: int, color: tuple[int, int, int], speed: int):        
         super().__init__(window, start_coord, width_obj, height_obj, color, speed, image_path="images/4/IT2-Spaceship1.png")
         self.bullets = []
 
-    def move(self) -> None:
+    def update(self) -> None:
         keys = pg.key.get_pressed()
         # Arrow and WASD control
         if keys[pg.K_LEFT] or keys[pg.K_a]:
@@ -105,7 +109,7 @@ class Alien(GameObject):
         
         self.x_speed = rnd.choice([-2, -1, 1, 2]) # Chosen speeds the enemy can have with x
 
-    def move(self) -> None:
+    def update(self) -> None:
         self.rect.y += self._speed
         self.rect.x += self.x_speed
         
@@ -118,6 +122,6 @@ class Bullet(GameObject):
     def __init__(self, window, start_coord: tuple[int, int], width_obj: int, height_obj: int, color: tuple[int, int, int], speed: int) -> None:
         super().__init__(window, start_coord, width_obj, height_obj, color, speed, image_path="images/4/IT2-bullet.png")
     
-    def move(self):
+    def update(self):
         # Moves upwards
         self.rect.y += self._speed

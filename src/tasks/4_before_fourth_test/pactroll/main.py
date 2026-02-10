@@ -1,172 +1,143 @@
 import pygame as pg
-import random as rnd
 from classes import Troll, Food, Obstacle
 from utils import spawn_free_pos
 from config import *
 
 
-def main():
-    # Start
-    pg.init()
-    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pg.time.Clock()
-    my_font = pg.font.SysFont(None, 50)
+class GameManager:
+    def __init__(self):
+        pg.init()
+        self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pg.display.set_caption("Troll Game")
+        self.clock = pg.time.Clock()
+        self.font = pg.font.SysFont(None, 50)
 
-    # Game variables
-    score: int = 0
-    GAME_OVER: bool = False
+        # Sprite groups
+        self.all_sprites = pg.sprite.Group()
+        self.foods = pg.sprite.Group()
+        self.obstacles = pg.sprite.Group()
 
-    # Troll
-    troll_player = Troll(
-        screen,
-        TROLL_START_COORD,
-        TROLL_WIDTH,
-        TROLL_HEIGHT,
-        TROLL_COLOR,
-        TROLL_SPEED_X,
-        TROLL_SPEED_Y,
-        my_font,
-        TROLL_LETTER,
-    )
+        # Game variables
+        self.score = 0
+        self.game_over = False
+        self.active = True
 
-    # Food
-    foods: list[Food] = []
-
-    for _ in range(FOOD_COUNT):
-        new_food_coord = (
-            rnd.randint(0, SCREEN_WIDTH - FOOD_WIDTH),
-            rnd.randint(0, SCREEN_HEIGHT - FOOD_HEIGHT),
+        # Player
+        self.player = Troll(
+            self.screen,
+            TROLL_START_COORD,
+            TROLL_WIDTH,
+            TROLL_HEIGHT,
+            TROLL_COLOR,
+            TROLL_SPEED_X,
+            TROLL_SPEED_Y,
+            self.font,
+            TROLL_LETTER
         )
-        foods.append(
-            Food(
-                screen,
-                new_food_coord,
-                FOOD_WIDTH,
-                FOOD_HEIGHT,
-                FOOD_COLOR,
-                my_font,
-                FOOD_LETTER,
-            )
+        self.all_sprites.add(self.player)
+
+        # Spawn initial foods
+        for _ in range(FOOD_COUNT):
+            self.spawn_food()
+
+        # Pending obstacles (delayed spawn)
+        self.pending_obstacles = []
+
+    def spawn_food(self):
+        new_food_coord = spawn_free_pos(
+            (FOOD_WIDTH, FOOD_HEIGHT),
+            list(self.foods) + list(self.obstacles) + [self.player],
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT
         )
+        food = Food(
+            self.screen,
+            new_food_coord,
+            FOOD_WIDTH,
+            FOOD_HEIGHT,
+            FOOD_COLOR,
+            self.font,
+            FOOD_LETTER
+        )
+        self.foods.add(food)
+        self.all_sprites.add(food)
 
-    pending_obstacles: list[tuple] = []
-    obstacles: list[Obstacle] = []
+    def spawn_obstacle(self, pos):
+        obstacle = Obstacle(
+            self.screen,
+            pos,
+            OBSTACLE_WIDTH,
+            OBSTACLE_HEIGHT,
+            OBSTACLE_COLOR,
+            self.font,
+            OBSTACLE_LETTER
+        )
+        self.obstacles.add(obstacle)
+        self.all_sprites.add(obstacle)
 
-    # Game setup
-    screen_rect = pg.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-    active = True
+    def handle_events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.active = False
 
-    # Game loop (Primary Loop)
-    while active:
-        # Check if the user wants to go out
-        for action in pg.event.get():
-            if action.type == pg.QUIT:
-                active = False
+    def update(self):
+        # Update all sprites
+        self.all_sprites.update(self.game_over)
 
-        screen.fill(BLACK)
+        # Check player out-of-bounds
+        if not self.screen.get_rect().contains(self.player.rect):
+            self.game_over = True
 
-        # Frem forth tha playah
-        troll_player.handle_input(GAME_OVER)
-        troll_player.move(GAME_OVER)
-        troll_player.update_speed()
-        troll_player.draw()
+        # Check collisions with foods
+        hit_foods = pg.sprite.spritecollide(self.player, self.foods, True)
+        for food in hit_foods:
+            self.player.update_speed()
+            self.score += 1
+            self.spawn_food()
+            spawn_time = pg.time.get_ticks() + OBSTACLE_DELAY_MS
+            self.pending_obstacles.append((food.rect.center, spawn_time))
 
-        if not screen_rect.contains(troll_player.rect):
-            GAME_OVER = True
-
-        # Draw the foods
-        for food in foods:
-            food.draw()
-
-        for food in foods[:]:  # Create a copy for effective deleting
-            if food.collides_with(troll_player):
-                troll_player.update_speed()
-
-                # Delete food
-                foods.remove(food)
-                score += 1
-
-                # Create new coords for the new food
-                new_food_coord = spawn_free_pos(
-                    (FOOD_WIDTH, FOOD_HEIGHT),
-                    foods + obstacles,
-                    SCREEN_WIDTH,
-                    SCREEN_HEIGHT,
-                )
-                foods.append(
-                    Food(
-                        screen,
-                        new_food_coord,
-                        FOOD_WIDTH,
-                        FOOD_HEIGHT,
-                        FOOD_COLOR,
-                        my_font,
-                        FOOD_LETTER,
-                    )
-                )
-
-                # Append the obstacle within pending_obstacles for the delay
-                spawn_time = pg.time.get_ticks() + OBSTACLE_DELAY_MS
-                pending_obstacles.append((food.rect.center, spawn_time))
-
-        current_time = (
-            pg.time.get_ticks()
-        )  # Get the number of milliseconds since pygame.init() was called
-
-        for pos, t in pending_obstacles[:]:
-            # Checks if the current time is more than the cooldown
+        # Spawn pending obstacles
+        current_time = pg.time.get_ticks()
+        for pos, t in self.pending_obstacles[:]:
             if current_time >= t:
-                # If it is, only then spawn the obstacle
-                obstacles.append(
-                    Obstacle(
-                        screen,
-                        pos,
-                        OBSTACLE_WIDTH,
-                        OBSTACLE_HEIGHT,
-                        OBSTACLE_COLOR,
-                        my_font,
-                        OBSTACLE_LETTER,
-                    )
-                )
-                # Remove the posistion and spawn time from the previous obstacle
-                pending_obstacles.remove((pos, t))
+                self.spawn_obstacle(pos)
+                self.pending_obstacles.remove((pos, t))
 
-        # Draw the obstacles
-        for obstacle in obstacles:
-            obstacle.draw()
+        # Check collisions with obstacles
+        if pg.sprite.spritecollideany(self.player, self.obstacles):
+            self.game_over = True
 
-            if obstacle.collides_with(troll_player):
-                GAME_OVER = True
+    def draw(self):
+        self.screen.fill(BLACK)
+        self.all_sprites.draw(self.screen)
 
         # Score
-        score_text = my_font.render(f"Score: {score}", True, (255, 255, 255))
-        screen.blit(score_text, (10, 10))
+        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self.screen.blit(score_text, (10, 10))
 
-        # Game Over
-        if GAME_OVER:
-            screen.fill(BLACK)
+        # Game Over screen
+        if self.game_over:
+            self.screen.fill(BLACK)
+            text = self.font.render("GAME OVER", True, (255, 0, 0))
+            text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 40))
+            self.screen.blit(text, text_rect)
 
-            # Text for GAME OVER
-            text = my_font.render("GAME OVER", True, (255, 0, 0))
-            text_rect = text.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 40)
-            )
-            screen.blit(text, text_rect)
+            game_over_score = self.font.render(f"SCORE: {self.score}", True, (255, 0, 0))
+            score_rect = game_over_score.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 40))
+            self.screen.blit(game_over_score, score_rect)
 
-            # Text for the score
-            game_over_score = my_font.render(f"SCORE: {score}", True, (255, 0, 0))
-            score_rect = game_over_score.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 40)
-            )
-            screen.blit(game_over_score, score_rect)
+    def run(self):
+        while self.active:
+            self.handle_events()
+            if not self.game_over:
+                self.update()
+            self.draw()
+            pg.display.flip()
+            self.clock.tick(FPS)
 
-        # Update
-        pg.display.flip()
-        clock.tick(FPS)
-
-    pg.quit()
+        pg.quit()
 
 
-# This checks if the file is being run while its open
 if __name__ == "__main__":
-    main()
+    GameManager().run()

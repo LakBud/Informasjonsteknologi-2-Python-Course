@@ -1,115 +1,130 @@
 import pygame as pg
 import random as rnd
-from classes import Player, Alien
+from classes import Player, Alien, Bullet
 
 # Global Variables
 WIDTH = 1600
 HEIGHT = 1000
 FPS = 60
 
+class GameManager:
+    def __init__(self):
+        # Pygame setup
+        pg.init()
+        self._screen = pg.display.set_mode((WIDTH, HEIGHT))
+        pg.display.set_caption("Space Shooter")
+        self._clock = pg.time.Clock()
+        self._font = pg.font.SysFont(None, 50)
 
-def main():
-    # Game Variables
-    active = True
-    score = 0
+        # Background
+        self._background_img = pg.image.load("images/4/IT2-background.png").convert()
+        self._background_img = pg.transform.scale(self._background_img, (WIDTH, HEIGHT))
 
-    # Player settings
-    start_pos: tuple[int, int] = (WIDTH // 2, HEIGHT // 2)
-    player_color: tuple[int, int, int] = (0, 0, 255) 
-    player_width: int = 100
-    player_height: int = 100
-    player_speed: int = 20 
+        # Sprite groups
+        self.all_sprites = pg.sprite.Group()
+        self.aliens = pg.sprite.Group()
+        self.bullets = pg.sprite.Group()
 
-    # Enemy configuration
-    spawn_timer = 0
-    spawn_interval = rnd.randint(30, 60)
+        # Player setup
+        start_pos = (WIDTH // 2, HEIGHT // 2)
+        self.player = Player(self._screen, start_pos, 100, 100, (0,0,255), 20)
+        self.all_sprites.add(self.player)
 
-    alien_height: int = rnd.randint(50, 100)
-    alien_width: int = rnd.randint(60, 100)
-    alien_color: tuple[int, int, int] = (0, 255, 0)
-    alien_speed: int = rnd.randint(3, 15)
+        # Game variables
+        self.active = True
+        self.score = 0
+        self.spawn_timer = 0
+        self.spawn_interval = rnd.randint(30, 60)
+        self._game_over = False
 
-
-    # Start 
-    pg.init()
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
-    clock = pg.time.Clock()
-    font = pg.font.SysFont(None, 50)
-    
-    # Load and scale the background image
-    background_img = pg.image.load("images/4/IT2-background.png").convert()
-    background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
-
-    player = Player(screen, start_pos, player_width, player_height, player_color, player_speed)
-
-
-    aliens = []
-
-    # Game Loop (Primary)
-    while active:
-        for action in pg.event.get():
-            # Quit functionality
-            if action.type == pg.QUIT:
-                active = False
-            # Checks if a key has been pressed, and if its space bar then shoot
-            elif action.type == pg.KEYDOWN:
-                if action.key == pg.K_SPACE:
-                    player.shoot()
-
+    def spawn_alien(self):
+        """Spawn a single alien and add it to sprite groups."""
         
-        # Black Background
-        screen.blit(background_img, (0, 0))
+        # Alien config
+        alien_height = rnd.randint(50, 100)
+        alien_width = rnd.randint(60, 100)
+        alien_color = (0, 255, 0)
+        alien_speed = rnd.randint(3, 15)
         
-        # Enter the user
-        player.move()
-        player.draw()
-        player.activate_border_collision()
-        
-        # Enter the aliens
-        for alien in aliens:
-            alien.draw()
-            alien.move()
-            
-            if alien.collides_with(player):
-                active = False
-            
-        # Remove aliens that passed the screen
-        for alien in aliens[:]:
-            if alien.rect.bottom > HEIGHT:
-                aliens.remove(alien)
-                score -= 1
-                
-        # Enter the bullets + checking for removal
-        for bullet in player.bullets[:]:
-            bullet.move()
-            bullet.draw()
-            
-            if bullet.rect.bottom < 0:
-                player.bullets.remove(bullet)
-                continue  # Skip to next bullet
+        alien = Alien(self._screen, alien_height, alien_width, alien_color, alien_speed)
+        self.aliens.add(alien)
+        self.all_sprites.add(alien)
 
-            for alien in aliens[:]:
-                if bullet.collides_with(alien):
-                    player.bullets.remove(bullet)
-                    aliens.remove(alien)
-                    score += 1
-                    break  # Stop checking this bullet
+    def handle_events(self):
+        """Handle user input and quitting."""
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.active = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    # Shoot a bullet
+                    bullet = Bullet(self._screen, (self.player.rect.centerx, self.player.rect.top), 10, 20, (255,0,0), -15)
+                    self.bullets.add(bullet)
+                    self.all_sprites.add(bullet)
+
+    def update(self):
+        """Update all game objects and handle collisions."""
+        
+        if not self._game_over:
+            # Update sprites
+            self.all_sprites.update()
+            self.player.activate_border_collision()
+
+            # Spawn aliens based on timer
+            self.spawn_timer += 1
+            if self.spawn_timer >= self.spawn_interval:
+                self.spawn_alien()
+                self.spawn_timer = 0
+
+            # Bullet → Alien collisions
+            hits = pg.sprite.groupcollide(self.aliens, self.bullets, True, True)
+            self.score += len(hits)
+
+            # Player → Alien collisions
+            if pg.sprite.spritecollide(self.player, self.aliens, False):
+                self._game_over = True
+
+            # Remove off-_screen aliens
+            for alien in self.aliens:
+                if alien.rect.top > HEIGHT:
+                    alien.kill()
+                    self.score -= 1
+
+            # Remove off-_screen bullets
+            for bullet in self.bullets:
+                if bullet.rect.bottom < 0:
+                    bullet.kill()
+
+    def draw(self):
+        """Draw everything to the _screen."""
+        self._screen.blit(self._background_img, (0, 0))
+        self.all_sprites.draw(self._screen)
 
         # Score display
-        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
-        screen.blit(score_text, (10, 10))
+        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self._screen.blit(score_text, (10, 10))
         
-        # Increment a frame counter and spawn a new alien when it reaches the interval then reset the counter
-        spawn_timer += 1
-        if spawn_timer >= spawn_interval:
-            aliens.append(Alien(screen, alien_height, alien_width, alien_color, alien_speed))
-            spawn_timer = 0
+        
+        if self._game_over:
+            text = self.font.render("GAME OVER", True, (255, 255, 255))
+            rect = text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+            self._screen.blit(text, rect)
 
-
-        # Update the screen
         pg.display.flip()
-        clock.tick(FPS)
 
-# This checks if the file is being run while its open
+    def run(self):
+        """Main game loop."""
+        while self.active:
+                self._clock.tick(FPS)
+                self.handle_events()
+                if not self._game_over:
+                    self.update()
+                self.draw()
+        pg.quit()
+
+
+
+# Entry point
 if __name__ == "__main__":
-    main()
+    game = GameManager()
+    game.run()
