@@ -101,12 +101,12 @@ class GameManager:
         self.all_sprites.draw(self._screen)
 
         # Score display
-        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        score_text = self._font.render(f"Score: {self.score}", True, (255, 255, 255))
         self._screen.blit(score_text, (10, 10))
         
         
         if self._game_over:
-            text = self.font.render("GAME OVER", True, (255, 255, 255))
+            text = self._font.render("GAME OVER", True, (255, 255, 255))
             rect = text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
             self._screen.blit(text, rect)
 
