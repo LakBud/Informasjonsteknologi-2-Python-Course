@@ -1,0 +1,87 @@
+@startuml Manic_Mansion
+skinparam classAttributeIconSize 0
+
+class GameBoard {
+    - height: int
+    - width: int
+    - _objects: list
+    - left_safe_zone: int
+    - right_safe_zone: int
+    + add_object(other_obj)
+    + remove_object(other_obj)
+    + random_position_in_zone(x_min, x_max, y_min=0, y_max=None, obj_width=60, obj_height=60, max_attempts=100)
+}
+
+class GameObject {
+    - _window
+    - _width: int
+    - _height: int
+    - _color: tuple
+    - _font
+    - _letter: str
+    - image
+    - rect
+    + draw()
+    + collides_with(other_obj) : bool
+    + move(dx:int, dy:int)
+}
+
+GameObject <|-- Human
+GameObject <|-- Obstacle
+GameObject <|-- Sheep
+GameObject <|-- Ghost
+
+class Human {
+    - _default_speed: int
+    - _speed: int
+    - _score: int
+    - _carrying_sheep: bool
+    + move(keys)
+    + reduce_speed(s_decrease:int)
+    + increase_points(p_increase:int)
+    + pick_up_sheep()
+    + deliver_sheep()
+    - _update_image()
+    + block_if_outside(board:GameBoard)
+}
+
+class Obstacle {
+}
+
+class Sheep {
+    - _is_carried: bool
+    + set_carried(state:bool)
+    + is_carried() : bool
+}
+
+class Ghost {
+    - _speed: int
+    - dx: int
+    - dy: int
+    + move(board:GameBoard)
+}
+
+class GameManager {
+    - _screen
+    - _clock
+    - _font
+    - _board: GameBoard
+    - _all_sprites: list[GameObject]
+    - _ghosts: list[Ghost]
+    - _sheeps: list[Sheep]
+    - _obstacles: list[Obstacle]
+    - _player: Human
+    - active: bool
+    - _score: int
+    - _game_over: bool
+    + handle_events()
+    + create_start_objects()
+    + draw()
+    + update()
+    + run()
+}
+
+GameManager "1" *-- "1" GameBoard : contains
+GameManager "1" *-- "*" GameObject : contains
+
+@enduml

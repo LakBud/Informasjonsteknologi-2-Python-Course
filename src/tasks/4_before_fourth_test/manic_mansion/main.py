@@ -1,5 +1,5 @@
 import pygame as pg
-from classes import GameBoard, Human, Obstacle, Sheep, Ghost
+from classes import GameBoard, Human, Obstacle, Sheep, Ghost, GameObject
 
 # Global Variables
 WIDTH = 1500
@@ -17,10 +17,10 @@ class GameManager:
         self._board = GameBoard(WIDTH, HEIGHT)
         
         # Lists
-        self._all_sprites = []
-        self._ghosts = []
-        self._sheeps = []
-        self._obstacles = []
+        self._all_sprites: list[GameObject] = []
+        self._ghosts: list[Ghost] = []
+        self._sheeps: list[Sheep] = []
+        self._obstacles: list[Obstacle] = []
         
         # Player
         start_x = self._board.left_safe_zone // 2

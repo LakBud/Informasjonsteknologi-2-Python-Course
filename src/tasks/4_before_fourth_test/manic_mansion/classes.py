@@ -66,9 +66,6 @@ class GameObject:
     def collides_with(self, other_obj) -> bool:
         # Checks if the obj has collided with something else
         return self.rect.colliderect(other_obj.rect)
-
-    def position(self, x: int, y: int) -> None:
-        self.rect.center = (x, y)
     
     def move(self, dx: int, dy: int) -> None:
         self.rect.x += dx
@@ -102,7 +99,7 @@ class Human(GameObject):
     def pick_up_sheep(self):
         self._carrying_sheep = True
         self.reduce_speed(5)
-        self._letter += "S+"  # update letter
+        self._letter += "S"  # update letter
         self._update_image()   # redraw surface
 
     def deliver_sheep(self):
