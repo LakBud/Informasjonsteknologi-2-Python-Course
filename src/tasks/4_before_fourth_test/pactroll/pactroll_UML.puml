@@ -56,6 +56,7 @@ class classes.Obstacle {
 GameObject <|-- Troll
 GameObject <|-- Food
 GameObject <|-- Obstacle
+GameManager "1" *-- "*" GameObject : contains
 
 
 @enduml

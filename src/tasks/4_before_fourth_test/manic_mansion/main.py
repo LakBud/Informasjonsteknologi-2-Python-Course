@@ -22,20 +22,13 @@ class GameManager:
         self._sheeps: list[Sheep] = []
         self._obstacles: list[Obstacle] = []
         
-        # Player
-        start_x = self._board.left_safe_zone // 2
-        start_y = HEIGHT // 2
-        
-        self._player = Human(self._screen, (start_x, start_y), 60, 60, (120, 0, 0), self._font, 10)
-        self._all_sprites.append(self._player)
-        
         # Game variables
         self.active = True
         self._score = 0
         self._game_over = False
         
         # Spawn Start Objects
-        self.create_start_objects()
+        self._create_start_objects()
 
     def handle_events(self) -> None:
         """Handle user input and quitting."""
@@ -43,7 +36,15 @@ class GameManager:
             if event.type == pg.QUIT:
                 self.active = False
     
-    def create_start_objects(self) -> None:
+    def _create_start_objects(self) -> None:
+        # Player
+        start_x = self._board.left_safe_zone // 2
+        start_y = HEIGHT // 2
+        
+        self._player: Human = Human(self._screen, (start_x, start_y), 60, 60, (120, 0, 0), self._font, 10)
+        self._all_sprites.append(self._player)
+        
+        # Obstacles
         for _ in range(3):
             o_pos = self._board.random_position_in_zone(
             self._board.left_safe_zone, 
@@ -57,6 +58,7 @@ class GameManager:
             self._all_sprites.append(obstacle)
             self._obstacles.append(obstacle)
         
+        # Ghosts
         g_pos = self._board.random_position_in_zone(
             self._board.left_safe_zone, 
             self._board.right_safe_zone,
@@ -69,6 +71,7 @@ class GameManager:
         self._all_sprites.append(ghost)
         self._ghosts.append(ghost)
         
+        # Sheeps
         for _ in range(3):
             s_pos = self._board.random_position_in_zone(
             self._board.right_safe_zone,
@@ -188,7 +191,24 @@ class GameManager:
             self._all_sprites.append(obstacle)
             self._obstacles.append(obstacle)
             
-        
+            # Spawn new ghost
+            g_pos = self._board.random_position_in_zone(
+            self._board.left_safe_zone, 
+            self._board.right_safe_zone,
+            obj_width=60,
+            obj_height=60
+            )
+
+            ghost = Ghost(self._screen, g_pos, 60, 60, (0, 100, 200), self._font, 3)
+            self._board.add_object(ghost)
+            self._all_sprites.append(ghost)
+            self._ghosts.append(ghost)
+            
+            self._board.add_object(ghost)
+            self._all_sprites.append(ghost)
+            self._ghosts.append(ghost)
+            
+
     def run(self): 
         """Main game loop."""
         while self.active:

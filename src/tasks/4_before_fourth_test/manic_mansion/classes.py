@@ -117,7 +117,7 @@ class Human(GameObject):
         letter_surface = self._font.render(self._letter, True, (0, 0, 0))
         letter_rect = letter_surface.get_rect(center=(self._width // 2, self._height // 2))
         self.image.blit(letter_surface, letter_rect)
-    
+        
     def block_if_outside(self, board: GameBoard) -> None:
         self.rect.clamp_ip(pg.Rect(0, 0, board.width, board.height))
 
@@ -150,6 +150,7 @@ class Ghost(GameObject):
         self.rect.x += self.dx 
         self.rect.y += self.dy 
         
+        # Border collision with left and right zone
         if self.rect.left <= board.left_safe_zone:
             self.rect.left = board.left_safe_zone
             self.dx *= -1
