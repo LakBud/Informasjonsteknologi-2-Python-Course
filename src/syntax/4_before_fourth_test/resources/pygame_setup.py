@@ -100,9 +100,9 @@ class Spillkontroll:
     def tegn_alt(self):
         """Tegner bakgrunn og alle objekter."""
         self._skjerm.fill((0, 0, 0)) # Sort bakgrunn
-        
         """Tegn alle objektene i spillet. Typisk kalle på tegn-metoden"""
         
+    
         pg.display.flip()
 
     def kjor(self):
