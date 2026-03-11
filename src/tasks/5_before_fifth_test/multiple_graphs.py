@@ -53,5 +53,5 @@ ax4.set_title("Function: $f(x)=\\frac{x}{3}$")
 ax4.set_xlim(0,5)
 ax4.set_ylim(0,3)
 
-plt.savefig("4graf-plot.png",dpi=300)
+plt.savefig("5/4graf-plot.png",dpi=300)
 plt.show()
