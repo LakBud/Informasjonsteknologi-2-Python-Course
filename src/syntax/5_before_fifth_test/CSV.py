@@ -5,7 +5,7 @@
 # 2;you ;cool?
 
 # For csv file, we print out each line individually (supposed to look like a table)
-with open("data/5/csv_data.csv", encoding="utf-8") as file:
+with open("data/5/traffic_data.csv", encoding="utf-8") as file:
     content = ""
     for line in file:
         # The split() splits every element with comma into a list
