@@ -84,7 +84,7 @@ ax2.set_ylim(0, 25)
 # savefig() saves the current figure as an image file.
 # dpi controls the resolution (300 dpi is good quality).
 
-plt.savefig("my_figure.png", dpi=300)
+plt.savefig("images/5/my_figure.png", dpi=300)
 
 # Show the figure on screen
 plt.show()

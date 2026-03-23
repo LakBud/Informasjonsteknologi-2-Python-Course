@@ -1,0 +1,20 @@
+{
+    "Tittel": "Personregister",
+    "personer": [
+        {
+        "fornavn": "Johnny",
+        "etternavn": "Bang",
+        "telefon": [
+            {"type": "mobil", "nummer": "123456789"}
+        ]
+        },
+        {
+        "fornavn": "Trude",
+        "etternavn": "Lutt",
+        "telefon": [
+            {"type": "mobil", "nummer": "123123123"},
+            {"type": "jobb", "nummer": "987654321"}
+        ]
+        }
+    ]
+}
