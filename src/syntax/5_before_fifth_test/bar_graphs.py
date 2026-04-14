@@ -1,63 +1,109 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Data
-YEARS = [2005,2009,2013,2017,2021]
+# -----------------------------
+# Read data from CSV (NO PANDAS)
+# -----------------------------
+years = []
+AP = []
+HOYRE = []
+FRP = []
 
-# Political parties
-AP = [61,64,55,49,48]
-HOYRE = [23,30,48,45,26]
-FRP = [15,10,12,20,18]
+with open("data.csv", "r") as file:
+    next(file)  # skip header
 
-total_datapoints = len(YEARS)
+    for line in file:
+        parts = line.strip().split(",")
+
+        years.append(int(parts[0]))
+        AP.append(int(parts[1]))
+        HOYRE.append(int(parts[2]))
+        FRP.append(int(parts[3]))
+
+# -----------------------------
+# Setup x-axis positions
+# -----------------------------
+total_datapoints = len(years)
 x_values = np.arange(total_datapoints)
 
-x_width = 0.2
-x_offset = x_width / 2
+x_width = 0.25
+x_offset = x_width
 
-fig, axes = plt.subplots()
+# -----------------------------
+# Create figure and axes
+# -----------------------------
+fig, axes = plt.subplots(figsize=(10, 6))
 
+# -----------------------------
+# Bars (grouped)
+# -----------------------------
+bars_AP = axes.bar(
+    x_values - x_offset,
+    AP,
+    width=x_width,
+    color="red",
+    edgecolor="black",
+    alpha=0.85,
+    label="AP"
+)
 
-bars_AP = axes.bar(x_values-(x_offset*2), AP, width=x_width, color="red", label="AP")
-bars_HOYRE = axes.bar(x_values + (x_offset*2), HOYRE, width=x_width, color="blue", label="Høyre")
-bars_FRP = axes.bar(x_values, FRP, width=x_width, color="yellow", label="FRP")
+bars_HOYRE = axes.bar(
+    x_values,
+    HOYRE,
+    width=x_width,
+    color="blue",
+    edgecolor="black",
+    alpha=0.85,
+    label="Høyre"
+)
 
-#viser du ulike fargene i en boks øverst til høyre
-plt.legend()
+bars_FRP = axes.bar(
+    x_values + x_offset,
+    FRP,
+    width=x_width,
+    color="yellow",
+    edgecolor="black",
+    alpha=0.85,
+    label="FRP"
+)
 
-# Set x-ticks
+# -----------------------------
+# Axis formatting
+# -----------------------------
 axes.set_xticks(x_values)
-axes.set_xticklabels(YEARS)
+axes.set_xticklabels(years)
 
-plt.title("Representanter i Stortinget")
-plt.grid(axis="y")
-plt.ylabel("Representanter")
-plt.xlabel("År")
+axes.set_title("Representanter i Stortinget")
+axes.set_xlabel("År")
+axes.set_ylabel("Representanter")
 
-# --- Annotate all bars ---
+axes.grid(axis="y", linestyle="--", alpha=0.5)
+axes.legend()
+
+# -----------------------------
+# Annotate bars
+# -----------------------------
 def annotate_bars(bars):
     for bar in bars:
         height = bar.get_height()
+
         axes.annotate(
-            f'{height}',                # Text is the height
-            xy=(bar.get_x() + bar.get_width() / 2, height),  # At top center of the bar
-            xytext=(0, 3),             # 3 points vertical offset
+            f"{height}",
+            xy=(bar.get_x() + bar.get_width() / 2, height),
+            xytext=(0, 3),
             textcoords="offset points",
-            ha='center',               # Center horizontally
-            va='bottom'                # Vertical alignment at the bottom of text
+            ha="center",
+            va="bottom",
+            fontsize=9
         )
 
 annotate_bars(bars_AP)
 annotate_bars(bars_HOYRE)
 annotate_bars(bars_FRP)
 
-# -----------------------------------------------------
-# Saving the figure
-# -----------------------------------------------------
-# savefig() saves the current figure as an image file.
-# dpi controls the resolution (300 dpi is good quality).
+# -----------------------------
+# Layout
+# -----------------------------
+fig.tight_layout()
 
-plt.savefig("my_figure.png", dpi=300)
-
-# Show the figure on screen
 plt.show()

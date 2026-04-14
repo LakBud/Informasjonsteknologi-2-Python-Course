@@ -2,7 +2,7 @@ import json
 from utils import to_int  # Helper function to safely convert values to integers
 
 # Read JSON file (latin-1 works better for Norwegian characters like æ, ø, å)
-with open("student_subjects.json", "r", encoding="latin-1") as file:
+with open("src/tasks/5_before_fifth_test/student_task/student_subjects.json", "r", encoding="utf-8") as file:
     data = json.load(file)  # Load data into Python list/dict
 
 
